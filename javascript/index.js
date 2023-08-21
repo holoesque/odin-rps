@@ -1,4 +1,3 @@
-
 const resultDiv   = document.querySelector('.result');
 const scoreDiv    = document.querySelector('.score-board');
 const rock        = document.querySelector('#rock');
@@ -27,11 +26,15 @@ scissors.addEventListener('click', () => {
 
 // functions
 
-function getComputerChoice () {
+function getComputerChoice() {
   const options = ["rock", "paper", "scissors"];
   const random = Math.floor(Math.random() * options.length);
 
   return options[random];
+}
+
+function getResult(roundData) {
+  return `You ${roundData[0]}! ${roundData[1].charAt(0).toUpperCase() + roundData[1].slice(1)} beats ${roundData[2]}!`
 }
 
 function playRound(choice) {
@@ -45,51 +48,51 @@ function playRound(choice) {
     case 'rock':
       switch (computerSelection) {
         case 'rock':
-          return "Tie. Try again.";
+          return ['tie'];
         case 'paper':
-          return "You lose! Paper beats rock!";
+          return ['lose', 'rock', 'paper'];
         case 'scissors':
-          return "You win! Rock beats scissors!";
+          return ['win', 'rock', 'scissors'];
       }
     case 'paper':
       switch (computerSelection) {
         case 'rock':
-          return "You win! Paper beats rock!";
+          return ['win', 'paper', 'rock'];
         case 'paper':
-          return "Tie. Try again.";
+          return ['tie'];
         case 'scissors':
-          return "You lose! Scissors beats paper!";
+          return ['lose', 'paper', 'scissors'];
       }
     case 'scissors':
       switch (computerSelection) {
         case 'rock':
-          return "You lose! Rock beats scissors!";
+          return ['loss', 'scissors', 'rock'];
         case 'paper':
-          return "You win! Scissors beats paper!";
+          return ['win', 'scissors', 'paper'];
         case 'scissors':
-          return "Tie. Try again.";
+          return ['tie'];
       }
-    default:
-      return "Invalid input, try again.";
   }
 }
 
-function game(roundResult) {
-  if (roundResult == "You win! Rock beats scissors!"
-   || roundResult == "You win! Paper beats rock!" 
-   || roundResult == "You win! Scissors beats paper!") {
+function game(roundData) {
+  let roundResult;
 
-    playerScore++;
-
-  } else if (roundResult == "You lose! Paper beats rock!" 
-          || roundResult == "You lose! Scissors beats paper!"
-          || roundResult == "You lose! Rock beats scissors!") {
-
-    computerScore++;
-
+  switch (roundData[0]) {
+    case 'win':
+      roundResult = getResult(roundData);
+      playerScore++;
+      break;
+    case 'lose':
+      roundResult = getResult(roundData);
+      computerScore++;
+      break;
+    case 'tie':
+      roundResult = `Tie. Try again`;
+      break;
   }
 
-    scoreDiv.textContent = `Current Score: You: ${playerScore} - CPU: ${computerScore}`;
+  scoreDiv.textContent = `Current Score: You: ${playerScore} - CPU: ${computerScore}`;
 
   if (playerScore === 5) {
     resultDiv.textContent = "You win the match!";
